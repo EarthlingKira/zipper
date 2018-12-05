@@ -98,6 +98,18 @@ namespace zipper {
 			unsigned long crcFile = 0;
 
 			zip_fileinfo zi = { 0 };
+            
+            struct tm filedate;
+            time_t now = time(0);
+            localtime_r(&now, &filedate);
+            zi.tmz_date.tm_sec  = filedate.tm_sec;
+            zi.tmz_date.tm_min  = filedate.tm_min;
+            zi.tmz_date.tm_hour = filedate.tm_hour;
+            zi.tmz_date.tm_mday = filedate.tm_mday;
+            zi.tmz_date.tm_mon  = filedate.tm_mon ;
+            zi.tmz_date.tm_year = filedate.tm_year;
+
+
 			size_t size_read;
 
 			std::vector<char> buff;
@@ -111,7 +123,7 @@ namespace zipper {
 
 			zip64 = (int)isLargeFile(input_stream);
 			if (password.empty())
-				err = zipOpenNewFileInZip64(m_zf,
+					err = zipOpenNewFileInZip64(m_zf,
 					nameInZip.c_str(),
 					&zi,
 					NULL,
